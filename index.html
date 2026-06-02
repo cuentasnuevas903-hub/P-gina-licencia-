@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LDC - Licencia de Conducción</title>
+<style>
+*{box-sizing:border-box}
+body{
+margin:0;
+font-family:Arial,sans-serif;
+background:#0d1117;
+color:#fff;
+}
+.hero{
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+padding:30px;
+}
+.card{
+width:100%;
+max-width:900px;
+background:rgba(20,20,30,.95);
+border:1px solid #2d5cff;
+border-radius:25px;
+padding:35px;
+box-shadow:0 10px 40px rgba(0,0,0,.5);
+}
+.logo{
+font-size:34px;
+font-weight:bold;
+color:#5fa8ff;
+margin-bottom:10px;
+}
+h1{
+font-size:42px;
+margin:0 0 15px;
+}
+p{
+color:#c9d1d9;
+line-height:1.6;
+}
+.small{
+font-size:12px;
+color:#8b949e;
+margin-top:20px;
+}
+button{
+background:#2d5cff;
+border:none;
+padding:14px 22px;
+color:white;
+border-radius:12px;
+font-size:16px;
+cursor:pointer;
+margin-top:15px;
+}
+button:hover{opacity:.9}
+.hidden{display:none}
+input{
+width:100%;
+padding:12px;
+margin:8px 0;
+border-radius:10px;
+border:1px solid #333;
+background:#111827;
+color:white;
+}
+.progress{
+height:10px;
+background:#1f2937;
+border-radius:10px;
+overflow:hidden;
+margin:15px 0;
+}
+.bar{
+height:100%;
+width:0%;
+background:#2d5cff;
+}
+.option{
+padding:12px;
+border:1px solid #333;
+border-radius:10px;
+margin:8px 0;
+cursor:pointer;
+}
+.option:hover{
+border-color:#2d5cff;
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+<div class="card">
+
+<div id="home">
+<div class="logo">LDC 🪪</div>
+<h1>Licencia de Conducción – Examen y Práctica en Línea</h1>
+<p>Conocé el proceso de licencia virtual y física, realizá tu práctica teórica y preparate mediante simulación online.</p>
+<p class="small">Solo simulacro.</p>
+<button onclick="showForm()">Sí, quiero realizar el examen</button>
+</div>
+
+<div id="form" class="hidden">
+<h2>Registro</h2>
+<input placeholder="Nombre y apellido">
+<input placeholder="DNI">
+<input type="date">
+<input placeholder="Domicilio">
+<input placeholder="Ciudad / Provincia">
+<input placeholder="Teléfono">
+<input placeholder="Email">
+<button onclick="startExam()">Comenzar examen</button>
+</div>
+
+<div id="exam" class="hidden">
+<h2>Simulacro</h2>
+<div class="progress"><div class="bar" id="bar"></div></div>
+<p id="question"></p>
+<div id="options"></div>
+</div>
+
+<div id="result" class="hidden">
+<h2>Resultado</h2>
+<p id="score"></p>
+<button onclick="location.reload()">Volver a intentar</button>
+</div>
+
+</div>
+</div>
+
+<script>
+const questions = [
+{q:"¿Qué indica la luz roja del semáforo?", a:["Avanzar","Detenerse","Precaución"], c:1},
+{q:"¿Es obligatorio usar cinturón?", a:["Sí","No","Solo ruta"], c:0},
+{q:"¿Se puede usar celular al conducir?", a:["Sí","No","Solo detenido"], c:1}
+];
+
+let current=0;
+let score=0;
+
+function showForm(){
+document.getElementById('home').classList.add('hidden');
+document.getElementById('form').classList.remove('hidden');
+}
+
+function startExam(){
+document.getElementById('form').classList.add('hidden');
+document.getElementById('exam').classList.remove('hidden');
+loadQuestion();
+}
+
+function loadQuestion(){
+const q=questions[current];
+document.getElementById('question').innerHTML="<b>"+q.q+"</b>";
+document.getElementById('bar').style.width=((current/questions.length)*100)+"%";
+let html="";
+q.a.forEach((op,i)=>{
+html += "<div class='option' onclick='selectAnswer("+i+")'>"+op+"</div>";
+});
+document.getElementById('options').innerHTML=html;
+}
+
+function selectAnswer(i){
+if(i===questions[current].c) score++;
+current++;
+if(current>=questions.length){
+document.getElementById('exam').classList.add('hidden');
+document.getElementById('result').classList.remove('hidden');
+document.getElementById('score').innerHTML="Tu puntaje fue "+score+" de "+questions.length;
+}else{
+loadQuestion();
+}
+}
+</script>
+
+</body>
+</html>
