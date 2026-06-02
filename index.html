@@ -3,234 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LDC Premium - Vial y Documentación</title>
+    <title>Gestión Vial Nacional - Registro Oficial</title>
     <style>
-        :root {
-            --bg-gradient: linear-gradient(135deg, #0f172a, #1e293b);
-            --card-bg: rgba(30, 41, 59, 0.7);
-            --border-color: rgba(255, 255, 255, 0.08);
-            --accent-blue: #2563eb;
-            --accent-hover: #3b82f6;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --accent-green: #10b981;
-            --accent-red: #ef4444;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
-        body { background: var(--bg-gradient); color: var(--text-main); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
-        .container { width: 100%; max-width: 950px; margin: auto; }
-
-        .main-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 30px; background: var(--card-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid var(--border-color); border-radius: 28px; padding: 40px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
-        .info-col { display: flex; flex-direction: column; justify-content: center; border-right: 1px solid rgba(255, 255, 255, 0.05); padding-right: 25px; }
-        .badge { align-self: flex-start; background: rgba(37, 99, 235, 0.15); color: #60a5fa; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; padding: 6px 16px; border-radius: 100px; margin-bottom: 20px; border: 1px solid rgba(37, 99, 235, 0.2); }
-        h1, h2, h3 { font-weight: 700; color: #ffffff; }
-        h1 { font-size: 32px; line-height: 1.2; margin-bottom: 15px; }
-        h2 { font-size: 24px; margin-bottom: 8px; }
-        .subtitle { color: var(--text-muted); font-size: 15px; line-height: 1.6; margin-bottom: 25px; }
-        .format-box { background: rgba(15, 23, 42, 0.4); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 16px; padding: 15px; margin-bottom: 25px; }
-        .format-title { font-size: 14px; font-weight: 600; color: #3b82f6; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
-        .requirements-list { list-style: none; }
-        .requirements-list li { font-size: 14px; color: #cbd5e1; margin-bottom: 12px; display: flex; align-items: flex-start; gap: 10px; line-height: 1.4; }
-        .requirements-list li::before { content: "✓"; color: var(--accent-green); font-weight: bold; margin-top: 2px; }
-        .config-col { display: flex; flex-direction: column; justify-content: center; padding-left: 10px; }
-        .config-title { font-size: 18px; font-weight: 600; margin-bottom: 20px; }
-
-        .card { display: none; max-width: 600px; margin: auto; background: var(--card-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid var(--border-color); border-radius: 28px; padding: 40px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
-        .card-header { margin-bottom: 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding-bottom: 15px; }
-        .form-group { margin-bottom: 18px; }
-        label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 8px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
-        input, select { width: 100%; padding: 14px 16px; border-radius: 12px; background: rgba(15, 23, 42, 0.6); color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.1); font-size: 15px; transition: all 0.2s ease; }
-        input:focus, select:focus { outline: none; border-color: var(--accent-blue); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); }
-        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-
-        .emission-options { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 18px; }
-        .emission-card { border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(15, 23, 42, 0.4); border-radius: 14px; padding: 16px; cursor: pointer; position: relative; transition: all 0.25s ease; display: flex; flex-direction: column; gap: 6px; }
-        .emission-card:hover:not(.disabled) { border-color: rgba(37, 99, 235, 0.5); background: rgba(37, 99, 235, 0.03); }
-        .emission-card input[type="radio"] { position: absolute; top: 14px; right: 14px; width: auto; accent-color: #2563eb; cursor: pointer; }
-        .emission-card.selected { border-color: var(--accent-blue); background: rgba(37, 99, 235, 0.1); box-shadow: 0 0 0 1px var(--accent-blue); }
-        .emission-card.disabled { opacity: 0.4; cursor: not-allowed; background: rgba(15, 23, 42, 0.8); border-color: transparent; }
-        .emission-title { font-size: 14px; font-weight: 600; color: #ffffff; display: flex; align-items: center; gap: 6px; }
-        .emission-price { font-size: 16px; font-weight: 700; color: var(--accent-green); margin-top: 2px; }
-        .emission-desc { font-size: 12px; color: var(--text-muted); line-height: 1.4; }
-
-        #delivery-address-group, #vehiculo-data-group { display: none; animation: fadeIn 0.3s ease; }
-        .section-divider { border-top: 1px dashed rgba(255, 255, 255, 0.1); margin: 25px 0 20px 0; padding-top: 15px; }
-        .section-divider h3 { font-size: 15px; color: #60a5fa; text-transform: uppercase; letter-spacing: 0.5px; }
-
-        .photo-upload-box { border: 2px dashed rgba(255, 255, 255, 0.15); border-radius: 16px; height: 160px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; cursor: pointer; background: rgba(15, 23, 42, 0.3); overflow: hidden; }
-        .photo-preview { width: 100%; height: 100%; object-fit: cover; display: none; }
-        .signature-box { border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(15, 23, 42, 0.5); border-radius: 16px; height: 160px; position: relative; }
-        #signature-canvas { width: 100%; height: 100%; cursor: crosshair; display: block; }
-        .clear-sig-btn { position: absolute; bottom: 8px; right: 8px; background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); padding: 4px 10px; border-radius: 8px; font-size: 11px; cursor: pointer; }
-
-        .loader-status { font-size: 14px; color: #cbd5e1; margin-bottom: 6px; display: flex; justify-content: space-between; }
-        .mini-progress { height: 6px; background: rgba(15, 23, 42, 0.6); border-radius: 10px; overflow: hidden; margin-bottom: 20px; }
-        .mini-bar { height: 100%; width: 0%; background: var(--accent-green); transition: width 0.8s ease-in-out; }
-
-        .exam-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .timer-badge { background: rgba(239, 68, 68, 0.15); color: #f87171; padding: 6px 14px; border-radius: 8px; font-weight: 700; font-size: 15px; border: 1px solid rgba(239,68,68,0.2); }
-        .question-text { font-size: 18px; font-weight: 600; margin-bottom: 20px; color: #ffffff; line-height: 1.4; }
-        .options-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 25px; }
-        .option-btn { background: rgba(15, 23, 42, 0.4); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 16px; color: #cbd5e1; text-align: left; font-size: 15px; cursor: pointer; transition: all 0.2s ease; }
-        .option-btn:hover { background: rgba(37, 99, 235, 0.1); border-color: var(--accent-blue); color: #ffffff; }
-        .option-btn.selected { background: var(--accent-blue); border-color: var(--accent-blue); color: white; font-weight: 500; }
-
-        .payment-box { background: rgba(15, 23, 42, 0.5); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 18px; padding: 22px; text-align: left; margin-bottom: 20px; }
-        .payment-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.05); font-size: 14px; }
-        .payment-row:last-child { border-bottom: none; }
-        .whatsapp-alert { background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 14px; padding: 18px; color: #a7f3d0; font-size: 14px; line-height: 1.5; text-align: left; margin-bottom: 20px; }
-
-        .btn-principal { width: 100%; background: var(--accent-blue); color: white; border: none; padding: 16px; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.25s ease; box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4); margin-top: 10px; }
-        .btn-principal:hover { background: var(--accent-hover); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(37, 99, 235, 0.5); }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
-
-        @media (max-width: 768px) {
-            .main-grid { grid-template-columns: 1fr; padding: 30px 20px; }
-            .info-col { border-right: none; border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding-right: 0; padding-bottom: 25px; margin-bottom: 10px; }
-            .config-col { padding-left: 0; }
-            .emission-options { grid-template-columns: 1fr; }
-            .form-row { grid-template-columns: 1fr; gap: 0; }
-        }
+        :root { --accent-blue: #2563eb; --accent-green: #10b981; --bg-dark: #0f172a; --card-dark: #1e293b; --text-muted: #94a3b8; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg-dark); color: white; margin: 0; padding: 20px; }
+        .card { background: var(--card-dark); padding: 25px; border-radius: 20px; max-width: 550px; margin: auto; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
+        .info-box { background: rgba(255,255,255,0.03); border: 1px solid var(--accent-blue); padding: 20px; border-radius: 16px; margin: 20px 0; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-size: 13px; color: var(--text-muted); }
+        input, select { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #334155; background: #0f172a; color: white; box-sizing: border-box; }
+        .btn-principal { width: 100%; background: var(--accent-blue); color: white; border: none; padding: 15px; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.3s; }
+        .btn-principal:hover { background: #1d4ed8; }
+        .whatsapp-alert { background: rgba(37, 99, 235, 0.15); border: 1px solid var(--accent-blue); padding: 20px; border-radius: 14px; margin-top: 20px; text-align: center; }
+        .footer-legal { text-align: center; margin-top: 30px; font-size: 10px; color: var(--text-muted); line-height: 1.4; }
+        .loader { display: none; text-align: center; padding: 40px; }
+        .progress-bar { height: 8px; background: #334155; border-radius: 4px; margin: 10px 0; overflow: hidden; }
+        .progress-fill { height: 100%; width: 0%; background: var(--accent-green); transition: 0.5s; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <!-- PANTALLA 1: BIENVENIDA -->
-    <div class="main-grid" id="home">
-        <div class="info-col">
-            <div class="badge">carner y Gestión Federal</div>
-            <h1>Documentación Vial Nacional</h1>
-            <p class="subtitle">Licencia de Conducción – O cedula Online. Saca tu carnet virtual o físico con un examen oficial sujeto a validación y práctica online.</p>
-            <div class="format-box">
-                <div class="format-title">📱 Modalidades Digitales:</div>
-                <ul class="requirements-list" style="margin-bottom: 10px;">
-                    <li><strong>Licencia Digital ($75.000):</strong> Sincronización en Mi Argentina.</li>
-                    <li><strong>Cédula Digital ($75.000):</strong> Emisión única disponible para circular.</li>
-                </ul>
-                <div class="format-title" style="color: #cbd5e1; margin-top: 15px;">💳 Modalidad Física:</div>
-                <ul class="requirements-list">
-                    <li><strong>Carnet Tradicional PVC ($135.000):</strong> Despacho postal al domicilio.</li>
-                </ul>
-            </div>
+<!-- PANTALLA 1: INICIO -->
+<div id="screen-1" class="card">
+    <h2 style="text-align:center;">Registro Nacional de Trámites Viales</h2>
+    <div class="info-box">
+        <h3 style="color: var(--accent-blue); margin-top: 0;">Soluciones de movilidad</h3>
+        <p style="font-size: 14px; line-height: 1.6;">Gestionamos tu primera licencia, renovación o recuperación de cédula vehicular de forma inmediata. Solución profesional para circular sin demoras.</p>
+        <p style="font-size: 12px; color: var(--text-muted); font-style: italic;">* Gestión privada. Utilícese con responsabilidad.</p>
+    </div>
+
+    <form id="regForm" onsubmit="event.preventDefault(); showLoader();">
+        <div class="form-group">
+            <label>Seleccione el Trámite (Inversión)</label>
+            <select id="tipo-tramite-select" onchange="updateForm()">
+                <option value="licencia">Licencia de Conducir - $75.000</option>
+                <option value="cedula">Cédula Digital - $75.000</option>
+                <option value="ambas">Ambas Documentaciones - $150.000</option>
+            </select>
         </div>
-        <div class="config-col">
-            <h3 class="config-title">Configurá tu examen</h3>
+
+        <div id="campo-direccion" style="display:none;">
             <div class="form-group">
-                <label for="jurisdiccion">Jurisdicción / Provincia</label>
-                <select id="jurisdiccion">
-                    <option value="Buenos Aires">Buenos Aires</option>
-                    <option value="Córdoba">Córdoba</option>
-                    <option value="Santa Fe">Santa Fe</option>
-                    <option value="Mendoza">Mendoza</option>
-                </select>
+                <label>Dirección de Envío (Vía Cargo)</label>
+                <input type="text" id="input-dir" placeholder="Calle, Número, Localidad, Provincia">
             </div>
-            <button class="btn-principal" onclick="irAlRegistro()">Continuar al Registro</button>
         </div>
+
+        <div id="info-envio" style="display:none; background: rgba(245, 158, 11, 0.1); border: 1px solid #f59e0b; padding: 15px; border-radius: 12px; margin-bottom: 15px;">
+            <strong style="color: #fbbf24;">📦 Envío Via Cargo:</strong>
+            <p style="font-size: 11px; color: #fbbf24; margin-top: 5px;">Demora 4-5 días hábiles tras validar pago. El carnet es 100% idéntico al original.</p>
+        </div>
+
+        <div class="form-group">
+            <label>CUIL (Sin guiones)</label>
+            <input type="text" id="input-cuil" placeholder="Ej: 20423334441" required>
+        </div>
+        
+        <button type="submit" class="btn-principal">Comenzar trámite</button>
+    </form>
+</div>
+
+<!-- PANTALLA 2: LOADER TÉCNICO -->
+<div id="screen-2" class="card loader">
+    <h3>Procesando Legajo...</h3>
+    <div class="progress-bar"><div id="bar-1" class="progress-fill"></div></div>
+    <p id="st-1" style="font-size: 12px;">Conectando con API RENAPER...</p>
+</div>
+
+<!-- PANTALLA 3: RESUMEN -->
+<div id="screen-3" class="card" style="display:none;">
+    <h2 style="text-align:center;">Solicitud Procesada</h2>
+    <div style="text-align:center; color: var(--accent-green); font-size: 12px; font-weight: bold; margin-bottom: 15px;">ESTADO: PENDIENTE DE VALIDACIÓN FINAL</div>
+    
+    <div class="whatsapp-alert">
+        <strong>⚠️ Instrucciones para la habilitación:</strong><br><br>
+        1. Transfiera el total al Alias: <code style="background:#000; padding:2px 5px; color:#fff;">RJIMENEZ33.COCOS</code><br>
+        2. Reporte el comprobante al WhatsApp oficial:
+        <br><br>
+        <a href="https://wa.me/5491125922448" class="btn-principal" style="background:#25d366;">💬 Consultar y Enviar Pago</a>
     </div>
 
-    <!-- PANTALLA 2: REGISTRO -->
-    <div class="card" id="form">
-        <div class="card-header">
-            <h2>Creación de Legajo de Documentación</h2>
-            <p style="color: var(--text-muted); font-size: 14px;">Completá los datos obligatorios.</p>
-        </div>
-        <form id="regForm" onsubmit="event.preventDefault(); guardarYProcesar();">
-            <div class="form-group">
-                <label>Nombre y Apellido</label>
-                <input type="text" id="input-nombre" placeholder="Ej: Juan Pérez" required>
-            </div>
-            <div class="form-group">
-                <label>DNI / CUIL (11 dígitos sin guiones)</label>
-                <input type="text" id="input-dni" maxlength="11" placeholder="Ej: 20423334441" required>
-            </div>
-            <button type="submit" class="btn-principal">Confirmar y Confeccionar Legajo</button>
-        </form>
-    </div>
-
-    <!-- PANTALLA 3: LOADER -->
-    <div class="card" id="loading-screen" style="text-align: center;">
-        <h2>Procesando Solicitud</h2>
-        <div class="mini-progress"><div class="mini-bar" id="bar-1"></div></div>
-        <p id="st-1">Conectando con base de datos...</p>
-    </div>
-
-    <!-- PANTALLA 4: EXAMEN -->
-    <div class="card" id="exam-screen">
-        <div class="exam-header">
-            <h2 id="question-text">Cargando pregunta...</h2>
-            <div class="timer-badge" id="timer-display">01:30</div>
-        </div>
-        <div class="options-list" id="options-container"></div>
-        <button class="btn-principal" id="next-btn" onclick="nextQuestion()" disabled>Responder</button>
-    </div>
-
-    <!-- PANTALLA 5: RESUMEN -->
-    <div class="card" id="payment-screen" style="text-align: center;">
-        <h2>Legajo Homologado</h2>
-        <div class="payment-box">
-            <p><strong>Alias para Pago:</strong> RJIMENEZ33.COCOS</p>
-            <p>Una vez realizado el pago, envíe el comprobante al WhatsApp oficial.</p>
-        </div>
-        <button class="btn-principal" onclick="finalizarTodo()">Ir a WhatsApp para Finalizar</button>
+    <div class="footer-legal">
+        <p>© 2026 Registro Nacional de Trámites Viales</p>
+        <p>Procesamiento automatizado por protocolos cifrados.</p>
     </div>
 </div>
 
 <script>
-    // Persistencia de datos al cargar
-    window.onload = () => {
-        const saved = localStorage.getItem('tramiteData');
-        if (saved) {
-            const data = JSON.parse(saved);
-            if(document.getElementById('input-nombre')) document.getElementById('input-nombre').value = data.nombre || "";
-            if(document.getElementById('input-dni')) document.getElementById('input-dni').value = data.dni || "";
-        }
-    };
-
-    function irAlRegistro() {
-        document.getElementById('home').style.display = 'none';
-        document.getElementById('form').style.display = 'block';
+    function updateForm() {
+        const val = document.getElementById('tipo-tramite-select').value;
+        const dir = document.getElementById('campo-direccion');
+        const info = document.getElementById('info-envio');
+        const show = (val === 'ambas' || val === 'licencia');
+        dir.style.display = show ? 'block' : 'none';
+        info.style.display = show ? 'block' : 'none';
     }
 
-    function guardarYProcesar() {
-        localStorage.setItem('tramiteData', JSON.stringify({
-            nombre: document.getElementById('input-nombre').value,
-            dni: document.getElementById('input-dni').value
-        }));
-        procesarLegajo();
-    }
-
-    function procesarLegajo() {
-        document.getElementById('form').style.display = 'none';
-        document.getElementById('loading-screen').style.display = 'block';
-        setTimeout(() => {
+    function showLoader() {
+        document.getElementById('screen-1').style.display = 'none';
+        document.getElementById('screen-2').style.display = 'block';
+        
+        setTimeout(() => { 
             document.getElementById('bar-1').style.width = '100%';
-            document.getElementById('st-1').innerText = '✅ Verificado';
+            document.getElementById('st-1').innerText = '✅ API Mi Argentina: Sincronizado';
             setTimeout(() => {
-                document.getElementById('loading-screen').style.display = 'none';
-                startExam();
+                document.getElementById('screen-2').style.display = 'none';
+                document.getElementById('screen-3').style.display = 'block';
             }, 1000);
-        }, 1500);
-    }
-
-    function startExam() {
-        document.getElementById('exam-screen').style.display = 'block';
-        // (Lógica de examen simplificada)
-        document.getElementById('question-text').innerText = "¿Qué indica la luz roja?";
-        const btn = document.createElement('button'); btn.className = 'option-btn'; btn.innerText = "Detenerse";
-        btn.onclick = () => { 
-            document.getElementById('exam-screen').style.display = 'none';
-            document.getElementById('payment-screen').style.display = 'block';
-        };
-        document.getElementById('options-container').appendChild(btn);
-    }
-
-    function finalizarTodo() {
-        localStorage.removeItem('tramiteData');
-        window.location.href = "https://wa.me/5491125922448";
+        }, 2000);
     }
 </script>
+
 </body>
 </html>
