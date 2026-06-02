@@ -1,181 +1,117 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LDC - Licencia de Conducción</title>
-<style>
-*{box-sizing:border-box}
-body{
-margin:0;
-font-family:Arial,sans-serif;
-background:#0d1117;
-color:#fff;
-}
-.hero{
-min-height:100vh;
-display:flex;
-justify-content:center;
-align-items:center;
-padding:30px;
-}
-.card{
-width:100%;
-max-width:900px;
-background:rgba(20,20,30,.95);
-border:1px solid #2d5cff;
-border-radius:25px;
-padding:35px;
-box-shadow:0 10px 40px rgba(0,0,0,.5);
-}
-.logo{
-font-size:34px;
-font-weight:bold;
-color:#5fa8ff;
-margin-bottom:10px;
-}
-h1{
-font-size:42px;
-margin:0 0 15px;
-}
-p{
-color:#c9d1d9;
-line-height:1.6;
-}
-.small{
-font-size:12px;
-color:#8b949e;
-margin-top:20px;
-}
-button{
-background:#2d5cff;
-border:none;
-padding:14px 22px;
-color:white;
-border-radius:12px;
-font-size:16px;
-cursor:pointer;
-margin-top:15px;
-}
-button:hover{opacity:.9}
-.hidden{display:none}
-input{
-width:100%;
-padding:12px;
-margin:8px 0;
-border-radius:10px;
-border:1px solid #333;
-background:#111827;
-color:white;
-}
-.progress{
-height:10px;
-background:#1f2937;
-border-radius:10px;
-overflow:hidden;
-margin:15px 0;
-}
-.bar{
-height:100%;
-width:0%;
-background:#2d5cff;
-}
-.option{
-padding:12px;
-border:1px solid #333;
-border-radius:10px;
-margin:8px 0;
-cursor:pointer;
-}
-.option:hover{
-border-color:#2d5cff;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión Vial Nacional - Registro Oficial</title>
+    <style>
+        :root { --accent-blue: #2563eb; --accent-green: #10b981; --bg-dark: #0f172a; --card-dark: #1e293b; --text-muted: #94a3b8; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg-dark); color: white; margin: 0; padding: 20px; }
+        .card { background: var(--card-dark); padding: 25px; border-radius: 20px; max-width: 550px; margin: auto; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
+        .info-box { background: rgba(255,255,255,0.03); border: 1px solid var(--accent-blue); padding: 20px; border-radius: 16px; margin: 20px 0; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-size: 13px; color: var(--text-muted); }
+        input, select { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #334155; background: #0f172a; color: white; box-sizing: border-box; }
+        .btn-principal { width: 100%; background: var(--accent-blue); color: white; border: none; padding: 15px; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.3s; }
+        .btn-principal:hover { background: #1d4ed8; }
+        .whatsapp-alert { background: rgba(37, 99, 235, 0.15); border: 1px solid var(--accent-blue); padding: 20px; border-radius: 14px; margin-top: 20px; text-align: center; }
+        .footer-legal { text-align: center; margin-top: 30px; font-size: 10px; color: var(--text-muted); line-height: 1.4; }
+        .loader { display: none; text-align: center; padding: 40px; }
+        .progress-bar { height: 8px; background: #334155; border-radius: 4px; margin: 10px 0; overflow: hidden; }
+        .progress-fill { height: 100%; width: 0%; background: var(--accent-green); transition: 0.5s; }
+    </style>
 </head>
 <body>
 
-<div class="hero">
-<div class="card">
+<!-- PANTALLA 1: INICIO -->
+<div id="screen-1" class="card">
+    <h2 style="text-align:center;">Registro Nacional de Trámites Viales</h2>
+    <div class="info-box">
+        <h3 style="color: var(--accent-blue); margin-top: 0;">Soluciones de movilidad</h3>
+        <p style="font-size: 14px; line-height: 1.6;">Gestionamos tu primera licencia, renovación o recuperación de cédula vehicular de forma inmediata. Solución profesional para circular sin demoras.</p>
+        <p style="font-size: 12px; color: var(--text-muted); font-style: italic;">* Gestión privada. Utilícese con responsabilidad.</p>
+    </div>
 
-<div id="home">
-<div class="logo">LDC 🪪</div>
-<h1>Licencia de Conducción – Examen y Práctica en Línea</h1>
-<p>Conocé el proceso de licencia virtual y física, realizá tu práctica teórica y preparate mediante simulación online.</p>
-<p class="small">Solo simulacro.</p>
-<button onclick="showForm()">Sí, quiero realizar el examen</button>
+    <form id="regForm" onsubmit="event.preventDefault(); showLoader();">
+        <div class="form-group">
+            <label>Seleccione el Trámite (Inversión)</label>
+            <select id="tipo-tramite-select" onchange="updateForm()">
+                <option value="licencia">Licencia de Conducir - $75.000</option>
+                <option value="cedula">Cédula Digital - $75.000</option>
+                <option value="ambas">Ambas Documentaciones - $150.000</option>
+            </select>
+        </div>
+
+        <div id="campo-direccion" style="display:none;">
+            <div class="form-group">
+                <label>Dirección de Envío (Vía Cargo)</label>
+                <input type="text" id="input-dir" placeholder="Calle, Número, Localidad, Provincia">
+            </div>
+        </div>
+
+        <div id="info-envio" style="display:none; background: rgba(245, 158, 11, 0.1); border: 1px solid #f59e0b; padding: 15px; border-radius: 12px; margin-bottom: 15px;">
+            <strong style="color: #fbbf24;">📦 Envío Via Cargo:</strong>
+            <p style="font-size: 11px; color: #fbbf24; margin-top: 5px;">Demora 4-5 días hábiles tras validar pago. El carnet es 100% idéntico al original.</p>
+        </div>
+
+        <div class="form-group">
+            <label>CUIL (Sin guiones)</label>
+            <input type="text" id="input-cuil" placeholder="Ej: 20423334441" required>
+        </div>
+        
+        <button type="submit" class="btn-principal">Comenzar trámite</button>
+    </form>
 </div>
 
-<div id="form" class="hidden">
-<h2>Registro</h2>
-<input placeholder="Nombre y apellido">
-<input placeholder="DNI">
-<input type="date">
-<input placeholder="Domicilio">
-<input placeholder="Ciudad / Provincia">
-<input placeholder="Teléfono">
-<input placeholder="Email">
-<button onclick="startExam()">Comenzar examen</button>
+<!-- PANTALLA 2: LOADER TÉCNICO -->
+<div id="screen-2" class="card loader">
+    <h3>Procesando Legajo...</h3>
+    <div class="progress-bar"><div id="bar-1" class="progress-fill"></div></div>
+    <p id="st-1" style="font-size: 12px;">Conectando con API RENAPER...</p>
 </div>
 
-<div id="exam" class="hidden">
-<h2>Simulacro</h2>
-<div class="progress"><div class="bar" id="bar"></div></div>
-<p id="question"></p>
-<div id="options"></div>
-</div>
+<!-- PANTALLA 3: RESUMEN -->
+<div id="screen-3" class="card" style="display:none;">
+    <h2 style="text-align:center;">Solicitud Procesada</h2>
+    <div style="text-align:center; color: var(--accent-green); font-size: 12px; font-weight: bold; margin-bottom: 15px;">ESTADO: PENDIENTE DE VALIDACIÓN FINAL</div>
+    
+    <div class="whatsapp-alert">
+        <strong>⚠️ Instrucciones para la habilitación:</strong><br><br>
+        1. Transfiera el total al Alias: <code style="background:#000; padding:2px 5px; color:#fff;">RJIMENEZ33.COCOS</code><br>
+        2. Reporte el comprobante al WhatsApp oficial:
+        <br><br>
+        <a href="https://wa.me/5491125922448" class="btn-principal" style="background:#25d366;">💬 Consultar y Enviar Pago</a>
+    </div>
 
-<div id="result" class="hidden">
-<h2>Resultado</h2>
-<p id="score"></p>
-<button onclick="location.reload()">Volver a intentar</button>
-</div>
-
-</div>
+    <div class="footer-legal">
+        <p>© 2026 Registro Nacional de Trámites Viales</p>
+        <p>Procesamiento automatizado por protocolos cifrados.</p>
+    </div>
 </div>
 
 <script>
-const questions = [
-{q:"¿Qué indica la luz roja del semáforo?", a:["Avanzar","Detenerse","Precaución"], c:1},
-{q:"¿Es obligatorio usar cinturón?", a:["Sí","No","Solo ruta"], c:0},
-{q:"¿Se puede usar celular al conducir?", a:["Sí","No","Solo detenido"], c:1}
-];
+    function updateForm() {
+        const val = document.getElementById('tipo-tramite-select').value;
+        const dir = document.getElementById('campo-direccion');
+        const info = document.getElementById('info-envio');
+        const show = (val === 'ambas' || val === 'licencia');
+        dir.style.display = show ? 'block' : 'none';
+        info.style.display = show ? 'block' : 'none';
+    }
 
-let current=0;
-let score=0;
-
-function showForm(){
-document.getElementById('home').classList.add('hidden');
-document.getElementById('form').classList.remove('hidden');
-}
-
-function startExam(){
-document.getElementById('form').classList.add('hidden');
-document.getElementById('exam').classList.remove('hidden');
-loadQuestion();
-}
-
-function loadQuestion(){
-const q=questions[current];
-document.getElementById('question').innerHTML="<b>"+q.q+"</b>";
-document.getElementById('bar').style.width=((current/questions.length)*100)+"%";
-let html="";
-q.a.forEach((op,i)=>{
-html += "<div class='option' onclick='selectAnswer("+i+")'>"+op+"</div>";
-});
-document.getElementById('options').innerHTML=html;
-}
-
-function selectAnswer(i){
-if(i===questions[current].c) score++;
-current++;
-if(current>=questions.length){
-document.getElementById('exam').classList.add('hidden');
-document.getElementById('result').classList.remove('hidden');
-document.getElementById('score').innerHTML="Tu puntaje fue "+score+" de "+questions.length;
-}else{
-loadQuestion();
-}
-}
+    function showLoader() {
+        document.getElementById('screen-1').style.display = 'none';
+        document.getElementById('screen-2').style.display = 'block';
+        
+        setTimeout(() => { 
+            document.getElementById('bar-1').style.width = '100%';
+            document.getElementById('st-1').innerText = '✅ API Mi Argentina: Sincronizado';
+            setTimeout(() => {
+                document.getElementById('screen-2').style.display = 'none';
+                document.getElementById('screen-3').style.display = 'block';
+            }, 1000);
+        }, 2000);
+    }
 </script>
 
 </body>
